@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:music_player/app/helpers/colors/color_schemes.dart';
 import 'package:music_player/app/modules/home/controllers/home_controller.dart';
+import 'package:music_player/app/routes/app_pages.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class SongListView extends GetView<HomeController> {
@@ -22,6 +23,10 @@ class SongListView extends GetView<HomeController> {
             return Column(
               children: List.generate(data.length, (index) {
                 return ListTile(
+                  onTap: () async {
+                    await controller.musicController.playSong(data[index]);
+                    Get.toNamed(Routes.MUSIC);
+                  },
                   leading: Container(
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(

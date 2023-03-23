@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:get/get.dart';
 import 'package:music_player/app/modules/home/controllers/home_controller.dart';
+import 'package:music_player/app/routes/app_pages.dart';
 
 class CurrentPlayingView extends GetView<HomeController> {
   @override
@@ -22,9 +23,10 @@ class CurrentPlayingView extends GetView<HomeController> {
                           horizontal:
                               BorderSide(width: 2, color: Colors.grey))),
                   child: ListTile(
+                    onTap: () => Get.toNamed(Routes.MUSIC),
                     title: Text(
                       "${controller.musicController.assetsAudioPlayer.getCurrentAudioTitle}",
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     subtitle: StreamBuilder<Duration>(

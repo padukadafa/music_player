@@ -54,18 +54,24 @@ class MusicController extends GetxController {
     print(assetsAudioPlayer.currentPosition.value);
   }
 
-  playSong(SongModel? song) async {
+  Future<void> playSong(SongModel? song) async {
     if (song != null && currentSongUri != song.uri) {
       currentSongUri = song.uri;
       await assetsAudioPlayer.open(
-        Audio.file(song.uri ?? "",
-            metas: Metas(
-                title: song.title,
-                album: song.album,
-                artist: song.artist,
-                id: song.id.toString())),
-        showNotification: true,
-      );
+          Audio.file(song.uri ?? "",
+              metas: Metas(
+                  title: song.title,
+                  album: song.album,
+                  artist: song.artist,
+                  id: song.id.toString())),
+          showNotification: true,
+          notificationSettings: NotificationSettings(
+            prevEnabled: false,
+            nextEnabled: false,
+            customPrevAction: (asset) {
+              print(asset.audioSessionId);
+            },
+          ));
     }
 
     await assetsAudioPlayer.play();
