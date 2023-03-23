@@ -19,62 +19,66 @@ class SongListView extends GetView<HomeController> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.data != null) {
-            final data = snapshot.data ?? [];
-            return Column(
-              children: List.generate(data.length, (index) {
-                return ListTile(
-                  onTap: () async {
-                    await controller.musicController.playSong(data[index]);
-                    Get.toNamed(Routes.MUSIC);
-                  },
-                  leading: Container(
-                    padding: EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: colorScheme(context).primaryContainer,
-                      borderRadius: BorderRadius.circular(8),
+            return Obx(() {
+              final songList = controller.songList;
+              return Column(
+                children: List.generate(songList.length, (index) {
+                  return ListTile(
+                    onTap: () async {
+                      await controller.musicController
+                          .playSong(songList[index]);
+                      Get.toNamed(Routes.MUSIC);
+                    },
+                    leading: Container(
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: colorScheme(context).primaryContainer,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: FaIcon(
+                        FontAwesomeIcons.music,
+                        color: colorScheme(context).onPrimaryContainer,
+                      ),
                     ),
-                    child: FaIcon(
-                      FontAwesomeIcons.music,
-                      color: colorScheme(context).onPrimaryContainer,
+                    title: Text(
+                      "${songList[index].title}",
+                      style: GoogleFonts.lato(
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                  title: Text(
-                    "${data[index].title}",
-                    style: GoogleFonts.lato(
-                      fontSize: 12,
-                    ),
-                  ),
-                  subtitle: Text(
-                      "${controller.convertMSToMinute(data[index].duration ?? 0)}"),
-                  trailing: StreamBuilder<bool>(
-                      stream: controller
-                          .musicController.assetsAudioPlayer.isPlaying,
-                      builder: (context, snapshot) {
-                        return IconButton(
-                            onPressed: () {
-                              if (controller.musicController.currentSongUri !=
-                                  data[index].uri) {
-                                controller.musicController
-                                    .playSong(data[index]);
-                              }
-                              if (snapshot.data ?? false) {
-                                controller.musicController.pauseSong();
-                              } else {
-                                controller.musicController
-                                    .playSong(data[index]);
-                              }
-                            },
-                            icon: ((snapshot.data ?? false) &&
-                                    controller.musicController.currentSongUri ==
-                                        data[index].uri)
-                                ? FaIcon(FontAwesomeIcons.pause)
-                                : FaIcon(FontAwesomeIcons.play));
-                      }),
-                );
-              }),
-            );
+                    subtitle: Text(
+                        "${controller.convertMSToMinute(songList[index].duration ?? 0)}"),
+                    trailing: StreamBuilder<bool>(
+                        stream: controller
+                            .musicController.assetsAudioPlayer.isPlaying,
+                        builder: (context, snapshot) {
+                          return IconButton(
+                              onPressed: () {
+                                if (controller.musicController.currentSongUri !=
+                                    songList[index].uri) {
+                                  controller.musicController
+                                      .playSong(songList[index]);
+                                }
+                                if (snapshot.data ?? false) {
+                                  controller.musicController.pauseSong();
+                                } else {
+                                  controller.musicController
+                                      .playSong(songList[index]);
+                                }
+                              },
+                              icon: ((snapshot.data ?? false) &&
+                                      controller
+                                              .musicController.currentSongUri ==
+                                          songList[index].uri)
+                                  ? FaIcon(FontAwesomeIcons.pause)
+                                  : FaIcon(FontAwesomeIcons.play));
+                        }),
+                  );
+                }),
+              );
+            });
           }
-          return Text("Loading...");
+          return Text("Getting song...");
         });
   }
 }

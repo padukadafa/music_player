@@ -12,6 +12,7 @@ class MusicController extends GetxController {
   final OnAudioQuery _audioQuery = OnAudioQuery();
   final assetsAudioPlayer = AssetsAudioPlayer();
   final count = 0.obs;
+  Rx<List<SongModel>> songList = Rx([]);
   String? currentSongUri;
   @override
   void onInit() {
@@ -43,6 +44,8 @@ class MusicController extends GetxController {
       List<SongModel> songs =
           await _audioQuery.querySongs(uriType: UriType.EXTERNAL);
       print(songs.length);
+      songList.value = songs;
+      update();
       return songs;
     } on PlatformException {
       return [];
