@@ -27,6 +27,7 @@ class MusicController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+    assetsAudioPlayer.dispose();
   }
 
   Future<List<SongModel>> getMusicList() async {
