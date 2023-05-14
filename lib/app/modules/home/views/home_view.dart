@@ -53,7 +53,7 @@ class HomeView extends GetView<HomeController> {
                   ),
                 ),
                 Expanded(child: SingleChildScrollView(child: SongListView())),
-                CurrentPlayingView(),
+                // CurrentPlayingView(),
               ],
             ))),
       ),

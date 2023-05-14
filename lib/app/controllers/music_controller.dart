@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_storage_path/flutter_storage_path.dart';
 import 'package:get/get.dart';
@@ -11,23 +12,26 @@ class MusicController extends GetxController {
 
   final OnAudioQuery _audioQuery = OnAudioQuery();
   final assetsAudioPlayer = AssetsAudioPlayer();
+  final player = AudioPlayer();
   final count = 0.obs;
   Rx<List<SongModel>> songList = Rx([]);
-  String? currentSongUri;
+  Rx<String?> currentSongUri = "".obs;
   @override
   void onInit() {
     super.onInit();
   }
 
   @override
-  void onReady() {
+  void onReady() async {
+    songList.value = await getMusicList();
+    songList.refresh();
     super.onReady();
   }
 
   @override
   void onClose() {
     super.onClose();
-    assetsAudioPlayer.dispose();
+    player.dispose();
   }
 
   Future<List<SongModel>> getMusicList() async {
@@ -58,26 +62,13 @@ class MusicController extends GetxController {
     print(assetsAudioPlayer.currentPosition.value);
   }
 
-  Future<void> playSong(SongModel? song) async {
-    if (song != null && currentSongUri != song.uri) {
-      currentSongUri = song.uri;
-      await assetsAudioPlayer.open(
-          Audio.file(song.uri ?? "",
-              metas: Metas(
-                  title: song.title,
-                  album: song.album,
-                  artist: song.artist,
-                  id: song.id.toString())),
-          showNotification: true,
-          notificationSettings: NotificationSettings(
-            prevEnabled: false,
-            nextEnabled: false,
-            customPrevAction: (asset) {
-              print(asset.audioSessionId);
-            },
-          ));
+  Future<void> playSong(SongModel song) async {
+    if (song.uri != null) {
+      await player.play(DeviceFileSource(song.data));
+      currentSongUri.value = song.data;
+      player.onPlayerComplete.listen((event) {
+        currentSongUri.value = "";
+      });
     }
-
-    await assetsAudioPlayer.play();
   }
 }

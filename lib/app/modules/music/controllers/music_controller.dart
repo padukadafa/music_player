@@ -24,7 +24,7 @@ class MusicPageController extends GetxController {
   }
 
   Future<void> seekMusicTo(Duration duration) async {
-    await musicController.assetsAudioPlayer.seek(duration);
+    await musicController.player.seek(duration);
   }
 
   convertMSToMinute(int duration) {

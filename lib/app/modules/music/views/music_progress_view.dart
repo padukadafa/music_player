@@ -8,8 +8,7 @@ class MusicProgressView extends GetView<MusicPageController> {
 
   @override
   Widget build(BuildContext context) {
-    final maxDuration = controller.musicController.assetsAudioPlayer.current
-        .value!.audio.duration.inMicroseconds;
+    final maxDuration = Duration(minutes: 20).inMilliseconds;
     return Column(
       children: [
         Container(
@@ -25,23 +24,24 @@ class MusicProgressView extends GetView<MusicPageController> {
               }),
         ),
         StreamBuilder<Duration>(
-            stream:
-                controller.musicController.assetsAudioPlayer.currentPosition,
-            builder: (context, snapshot) {
-              return Container(
-                child: Slider.adaptive(
-                    value: (((snapshot.data) ?? Duration.zero).inMicroseconds)
-                        .toDouble(),
-                    min: 0,
-                    max: (maxDuration).toDouble(),
-                    onChanged: (val) {
-                      print(val);
-                      controller.seekMusicTo(Duration(
-                        microseconds: (val).toInt(),
-                      ));
-                    }),
-              );
-            }),
+          stream: controller.musicController.player.onDurationChanged,
+          builder: (context, snapshot) {
+            return Slider.adaptive(
+              value: (((snapshot.data) ?? Duration.zero).inMicroseconds)
+                  .toDouble(),
+              min: 0,
+              max: (maxDuration).toDouble(),
+              onChanged: (val) {
+                print(val);
+                controller.seekMusicTo(
+                  Duration(
+                    microseconds: (val).toInt(),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ],
     );
   }

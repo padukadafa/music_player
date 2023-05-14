@@ -33,29 +33,29 @@ class MusicButtonView extends GetView<MusicPageController> {
             color: colorScheme(context).primaryContainer,
             shape: BoxShape.circle,
           ),
-          child: StreamBuilder<bool>(
-            stream: controller.musicController.assetsAudioPlayer.isPlaying,
-            builder: (context, snapshot) {
-              return IconButton(
-                onPressed: () {
-                  if (snapshot.data ?? false) {
-                    controller.musicController.pauseSong();
-                  } else {
-                    controller.musicController.playSong(null);
-                  }
-                },
-                icon: (snapshot.data ?? false)
-                    ? FaIcon(
-                        FontAwesomeIcons.pause,
-                        size: 36,
-                      )
-                    : FaIcon(
-                        FontAwesomeIcons.play,
-                        size: 36,
-                      ),
-              );
-            },
-          ),
+          // child: StreamBuilder<bool>(
+          //   stream: controller.musicController.assetsAudioPlayer.isPlaying,
+          //   builder: (context, snapshot) {
+          //     return IconButton(
+          //       onPressed: () {
+          //         if (snapshot.data ?? false) {
+          //           controller.musicController.pauseSong();
+          //         } else {
+          //           controller.musicController.playSong(null);
+          //         }
+          //       },
+          //       icon: (snapshot.data ?? false)
+          //           ? FaIcon(
+          //               FontAwesomeIcons.pause,
+          //               size: 36,
+          //             )
+          //           : FaIcon(
+          //               FontAwesomeIcons.play,
+          //               size: 36,
+          //             ),
+          //     );
+          //   },
+          // ),
         ),
         IconButton(
           onPressed: () {},
